@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "valeeramirez",
+    "password": "vale123",
+    "database": "entrega0",
+    "host": "db",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "valeeramirez",
+    "password": "vale123",
+    "database": "entrega0",
+    "host": "db",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "valeeramirez",
+    "password": "vale123",
+    "database": "entrega0",
+    "host": "db",
+    "port": 5432,
+    "dialect": "postgres"
+  }
+}

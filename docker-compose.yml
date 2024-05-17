@@ -1,0 +1,81 @@
+version: '3.4'
+
+services:
+  app:
+    image: app
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: app
+    restart: unless-stopped
+    networks:
+      - app-network
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_USER: ${DB_USER}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      BROCKER_HOST: ${HOST}
+      BROCKER_PORT: ${PORT}
+      BROCKER_USER: ${USER}
+      BROCKER_PASSWORD: ${PASSWORD}
+      PORT: ${PORT1}
+  app2:
+    image: app2
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: app2
+    restart: unless-stopped
+    networks:
+      - app-network
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      DATABASE_USER: ${DB_USER}
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      BROCKER_HOST: ${HOST}
+      BROCKER_PORT: ${PORT}
+      BROCKER_USER: ${USER}
+      BROCKER_PASSWORD: ${PASSWORD}
+      PORT: ${PORT2}
+  db: 
+    image: postgres
+    container_name: postgres
+    restart: unless-stopped
+    networks:
+      - app-network
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+  mqtt-client:
+    image: mqtt-client
+    build:
+      context: ./
+      dockerfile: ./mqtt-client.Dockerfile
+    container_name: mqtt-client
+    restart: unless-stopped
+    networks:
+      - app-network
+    depends_on:
+      - app
+    environment:
+      BROCKER_HOST: ${HOST}
+      BROCKER_PORT: ${PORT}
+      BROCKER_USER: ${USER}
+      BROCKER_PASSWORD: ${PASSWORD}
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  db-volume:
